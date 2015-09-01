@@ -1,0 +1,11 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+.idea/
+app/
+Libs.iml
+libs/src/androidTest/java/silicar/brady/libs/ApplicationTest.java
