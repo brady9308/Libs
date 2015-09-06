@@ -9,15 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class AdapterViewHolder
+public class CommonViewHolder
 {
 	private final SparseArray<View> mViews;
 	private int mPosition;
 	private int oldPosition;
 	private View mConvertView;
 
-	private AdapterViewHolder(Context context, ViewGroup parent, int layoutId,
-							  int position)
+	private CommonViewHolder(Context context, ViewGroup parent, int layoutId,
+							 int position)
 	{
 		this.mPosition = position;
 		this.mViews = new SparseArray<View>();
@@ -37,26 +37,26 @@ public class AdapterViewHolder
 	 * @param layoutId		视图对应的布局文件
 	 * @return
 	 */
-	public static AdapterViewHolder get(Context context, int position, View convertView,
+	public static CommonViewHolder get(Context context, int position, View convertView,
 			ViewGroup parent, int layoutId)
 	{
 		if (convertView == null)
 		{
-			return new AdapterViewHolder(context, parent, layoutId, position);
+			return new CommonViewHolder(context, parent, layoutId, position);
 		}
 		//((AdapterViewHolder)convertView.getTag()).setPosition(position);
 		try {
-			((AdapterViewHolder) convertView.getTag()).setOldPosition(((AdapterViewHolder) convertView.getTag()).getPosition());
-			((AdapterViewHolder)convertView.getTag()).setPosition(position);
+			((CommonViewHolder) convertView.getTag()).setOldPosition(((CommonViewHolder) convertView.getTag()).getPosition());
+			((CommonViewHolder)convertView.getTag()).setPosition(position);
 		} catch (Exception e) {
-			convertView.setTag(new AdapterViewHolder(context, parent, layoutId, position));
+			convertView.setTag(new CommonViewHolder(context, parent, layoutId, position));
 		}
-		return (AdapterViewHolder) convertView.getTag();
+		return (CommonViewHolder) convertView.getTag();
 	}
 
-	public static AdapterViewHolder get(Context context, int position, ViewGroup parent, int layoutId)
+	public static CommonViewHolder get(Context context, int position, ViewGroup parent, int layoutId)
 	{
-		return new AdapterViewHolder(context, parent, layoutId, position);
+		return new CommonViewHolder(context, parent, layoutId, position);
 	}
 
 	public View getConvertView()
@@ -89,7 +89,7 @@ public class AdapterViewHolder
 	 * @param text
 	 * @return
 	 */
-	public AdapterViewHolder setText(int viewId, String text)
+	public CommonViewHolder setText(int viewId, String text)
 	{
 		TextView view = (TextView) getView(viewId);
 		view.setText(text);
@@ -103,7 +103,7 @@ public class AdapterViewHolder
 	 * @param drawableId
 	 * @return
 	 */
-	public AdapterViewHolder setImageResource(int viewId, int drawableId)
+	public CommonViewHolder setImageResource(int viewId, int drawableId)
 	{
 		ImageView view = (ImageView) getView(viewId);
 		view.setImageResource(drawableId);
@@ -118,7 +118,7 @@ public class AdapterViewHolder
 	 * @param bm
 	 * @return
 	 */
-	public AdapterViewHolder setImageBitmap(int viewId, Bitmap bm)
+	public CommonViewHolder setImageBitmap(int viewId, Bitmap bm)
 	{
 		ImageView view = (ImageView) getView(viewId);
 		view.setImageBitmap(bm);
