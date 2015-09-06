@@ -70,7 +70,7 @@ public class AdapterViewHolder
 	 * @param viewId
 	 * @return
 	 */
-	public <T extends View> T getView(int viewId)
+	public View getView(int viewId)
 	{
 		View view = mViews.get(viewId);
 		if (view == null)
@@ -79,7 +79,7 @@ public class AdapterViewHolder
 			mViews.put(viewId, view);
 		}
 		view.setTag(mPosition);
-		return (T) view;
+		return  view;
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class AdapterViewHolder
 	 */
 	public AdapterViewHolder setText(int viewId, String text)
 	{
-		TextView view = getView(viewId);
+		TextView view = (TextView) getView(viewId);
 		view.setText(text);
 		return this;
 	}
@@ -105,7 +105,7 @@ public class AdapterViewHolder
 	 */
 	public AdapterViewHolder setImageResource(int viewId, int drawableId)
 	{
-		ImageView view = getView(viewId);
+		ImageView view = (ImageView) getView(viewId);
 		view.setImageResource(drawableId);
 
 		return this;
@@ -120,7 +120,7 @@ public class AdapterViewHolder
 	 */
 	public AdapterViewHolder setImageBitmap(int viewId, Bitmap bm)
 	{
-		ImageView view = getView(viewId);
+		ImageView view = (ImageView) getView(viewId);
 		view.setImageBitmap(bm);
 		return this;
 	}
