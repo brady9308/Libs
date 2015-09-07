@@ -14,17 +14,17 @@ public class CommonViewHolder
 	private final SparseArray<View> mViews;
 	private int mPosition;
 	private int oldPosition;
-	private View mConvertView;
+	public View itemView;
 
 	private CommonViewHolder(Context context, ViewGroup parent, int layoutId,
 							 int position)
 	{
 		this.mPosition = position;
 		this.mViews = new SparseArray<View>();
-		mConvertView = LayoutInflater.from(context).inflate(layoutId, parent,
+		itemView = LayoutInflater.from(context).inflate(layoutId, parent,
 				false);
 		// setTag
-		mConvertView.setTag(this);
+		itemView.setTag(this);
 	}
 
 	/**
@@ -59,13 +59,13 @@ public class CommonViewHolder
 		return new CommonViewHolder(context, parent, layoutId, position);
 	}
 
-	public View getConvertView()
+	public View getItemView()
 	{
-		return mConvertView;
+		return itemView;
 	}
 
 	/**
-	 * 通过控件的Id获取对于的控件，如果没有则加入views
+	 * 通过控件的Id获取对应的子控件，如果没有则加入views
 	 * 
 	 * @param viewId
 	 * @return
@@ -75,7 +75,7 @@ public class CommonViewHolder
 		View view = mViews.get(viewId);
 		if (view == null)
 		{
-			view = mConvertView.findViewById(viewId);
+			view = itemView.findViewById(viewId);
 			mViews.put(viewId, view);
 		}
 		view.setTag(mPosition);
@@ -89,11 +89,11 @@ public class CommonViewHolder
 	 * @param text
 	 * @return
 	 */
-	public CommonViewHolder setText(int viewId, String text)
+	public TextView setText(int viewId, String text)
 	{
 		TextView view = (TextView) getView(viewId);
 		view.setText(text);
-		return this;
+		return view;
 	}
 
 	/**
@@ -103,12 +103,11 @@ public class CommonViewHolder
 	 * @param drawableId
 	 * @return
 	 */
-	public CommonViewHolder setImageResource(int viewId, int drawableId)
+	public ImageView setImageResource(int viewId, int drawableId)
 	{
 		ImageView view = (ImageView) getView(viewId);
 		view.setImageResource(drawableId);
-
-		return this;
+		return view;
 	}
 
 	/**
@@ -118,11 +117,11 @@ public class CommonViewHolder
 	 * @param bm
 	 * @return
 	 */
-	public CommonViewHolder setImageBitmap(int viewId, Bitmap bm)
+	public ImageView setImageBitmap(int viewId, Bitmap bm)
 	{
 		ImageView view = (ImageView) getView(viewId);
 		view.setImageBitmap(bm);
-		return this;
+		return view;
 	}
 
 	public int getPosition()
@@ -144,6 +143,6 @@ public class CommonViewHolder
 
 	public Object getTag()
 	{
-		return mConvertView.getTag();
+		return itemView.getTag();
 	}
 }

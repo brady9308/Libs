@@ -69,12 +69,12 @@ public abstract class CommonAdapter<T> extends BaseAdapter
 	}
 
 	/**
-	 * 设置helper对应item参数显示视图
-	 * @param helper
+	 * 设置holder对应item参数显示视图
+	 * @param holder
 	 * @param item
 	 * @param position
 	 */
-	public abstract void convert(CommonViewHolder helper, T item, int position);
+	public abstract void onBindViewHolder(CommonViewHolder holder, T item, int position);
 
 	//获取指定位置段视图
 	//设置显示格式，更新初始化View时系统自动调用
@@ -91,24 +91,25 @@ public abstract class CommonAdapter<T> extends BaseAdapter
 		return createViewFromResource(position, convertView, parent, mDropDownLayoutId);
 	}
 
-	private View createViewFromResource(int position, View convertView, ViewGroup parent, int resource)
+	private View createViewFromResource(int position, View convertView, ViewGroup parent, int layoutId)
 	{
 		//position数据项目的位置，convertView如果有旧视图重新使用，parent依附的父视图
 		CommonViewHolder viewHolder;
 		if (reuse)
 		{
 			viewHolder = CommonViewHolder.get(mContext,
-					position, convertView, parent, resource);
+					position, convertView, parent, layoutId);
 		}
 		else
 		{
-			viewHolder = CommonViewHolder.get(mContext, position, parent, resource);
+			viewHolder = CommonViewHolder.get(mContext, position, parent, layoutId);
 		}
-		//设置helper对应item参数显示视图
-		convert(viewHolder, getItem(position), position);
-		return viewHolder.getConvertView();
+		//设置holder对应item参数显示视图
+		onBindViewHolder(viewHolder, getItem(position), position);
+		return viewHolder.getItemView();
 	}
 
+	//返回Spinner使用的资源布局
 	public int getDropDownLayoutId() {
 		return mDropDownLayoutId;
 	}
@@ -118,11 +119,11 @@ public abstract class CommonAdapter<T> extends BaseAdapter
 		this.mDropDownLayoutId = resource;
 	}
 
-	public int getLayoutId() {
+	public int getItemLayoutId() {
 		return mItemLayoutId;
 	}
 
-	public void setLayoutId(int layoutId) {
+	public void setItemLayoutId(int layoutId) {
 		this.mItemLayoutId = layoutId;
 	}
 
@@ -130,6 +131,10 @@ public abstract class CommonAdapter<T> extends BaseAdapter
 		return reuse;
 	}
 
+	/**
+	 * 设置是否使用复用
+	 * @param reuse
+	 */
 	public void setReuse(boolean reuse) {
 		this.reuse = reuse;
 	}
