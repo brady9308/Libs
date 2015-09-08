@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import silicar.brady.libs.view.util.CommonViewHolder;
-import silicar.brady.libs.view.util.RecyclerViewHolder;
+import silicar.brady.libs.view.util.RecyclerViewUtil.ViewHolder;
+import silicar.brady.libs.view.util.RecyclerViewUtil;
 
 /**
  * RecyclerView通用Adapter
@@ -17,7 +18,7 @@ import silicar.brady.libs.view.util.RecyclerViewHolder;
  * @since 2015/9/6
  * @author 图图
  */
-public abstract class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerViewHolder> {
+public abstract class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerViewUtil.ViewHolder> {
 
     protected Context mContext;
     protected LayoutInflater mInflater;
@@ -32,14 +33,14 @@ public abstract class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerViewHolder holder = new RecyclerViewHolder(
+    public RecyclerViewUtil.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        RecyclerViewUtil.ViewHolder holder = new RecyclerViewUtil.ViewHolder(
                 mInflater.inflate(mItemLayoutId, parent, false));
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerViewUtil.ViewHolder holder, int position) {
         onBindViewHolder(holder, getItem(position), position);
     }
 
@@ -49,7 +50,7 @@ public abstract class RecyclerAdapter<T> extends RecyclerView.Adapter<RecyclerVi
      * @param item
      * @param position
      */
-    public abstract void onBindViewHolder(RecyclerViewHolder holder, T item, int position);
+    public abstract void onBindViewHolder(RecyclerViewUtil.ViewHolder holder, T item, int position);
 
     /**
      * 返回Adapter数据集

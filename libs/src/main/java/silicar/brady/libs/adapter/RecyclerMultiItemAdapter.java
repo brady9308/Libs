@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
-import silicar.brady.libs.view.util.RecyclerViewHolder;
+import silicar.brady.libs.view.util.RecyclerViewUtil;
 
 /**
  * RecyclerView通用多条目Adapter
@@ -20,7 +20,7 @@ public abstract class RecyclerMultiItemAdapter<T> extends RecyclerAdapter<T> {
     }
 
     @Override
-    public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerViewUtil.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         setItemLayoutId(getItemLayoutId(viewType));
         return super.onCreateViewHolder(parent, viewType);
     }
