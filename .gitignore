@@ -9,3 +9,4 @@
 app/
 Libs.iml
 libs/src/androidTest/java/silicar/brady/libs/ApplicationTest.java
+application/
