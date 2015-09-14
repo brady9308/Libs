@@ -8,9 +8,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Base64;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -34,12 +36,39 @@ import java.util.Random;
  */
 public class Tools {
 
+
+    /**
+     * 设置状态栏和导航条半透明
+     * @param activity
+     */
+    public static void setTranslucentBar(Activity activity)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //设置状态栏透明
+            WindowManager.LayoutParams localLayoutParams = activity.getWindow().getAttributes();
+            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION| localLayoutParams.flags);
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            // 创建状态栏的管理实例 https://github.com/richardprior/SystemBarTint
+            //SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            // 激活状态栏设置
+            //tintManager.setStatusBarTintEnabled(true);
+            // 激活导航栏设置
+            //tintManager.setNavigationBarTintEnabled(true);
+            // 设置一个颜色给系统栏
+            //tintManager.setTintColor(Color.parseColor("#FFFF6666"));
+        }
+    }
+
+    /**
+     * 为编码添加控件生成Id
+     */
     public static class Id
     {
         private static int mId = 0x7F000000;
         public static int createId()
         {
-            if(mId == 0) --mId;
+            if(mId == 0 || mId == -1) --mId;
             return --mId;
         }
     }
