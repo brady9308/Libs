@@ -28,6 +28,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -75,6 +76,9 @@ public class SystemBarTintManager {
     private boolean mNavBarTintEnabled;
     private View mStatusBarTintView;
     private View mNavBarTintView;
+    private View mContentView;
+    private Activity activity;
+    ViewGroup decorViewGroup;
 
     /**
      * Constructor. Call this in the host activity onCreate method after its
@@ -85,9 +89,9 @@ public class SystemBarTintManager {
      */
     @TargetApi(19)
     public SystemBarTintManager(Activity activity) {
-
+        this.activity = activity;
         Window win = activity.getWindow();
-        ViewGroup decorViewGroup = (ViewGroup) win.getDecorView();
+        decorViewGroup = (ViewGroup) win.getDecorView();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // check theme attrs
@@ -126,6 +130,28 @@ public class SystemBarTintManager {
             setupNavBarView(activity, decorViewGroup);
         }
 
+    }
+
+    public View getContentView() {
+        return mContentView;
+    }
+
+    public void setContentView(View contentView) {
+        this.mContentView = contentView;
+        mContentView.setFilterTouchesWhenObscured(true);
+        if (mContentView != null)
+            decorViewGroup.addView(mContentView);
+    }
+
+    public void setContentView(int layoutId)
+    {
+        setContentView(layoutId, null);
+    }
+
+    public void setContentView( int layoutId, ViewGroup root) {
+        mContentView = LayoutInflater.from(activity).inflate(layoutId, root);
+        if (mContentView != null)
+            decorViewGroup.addView(mContentView);
     }
 
     /**
