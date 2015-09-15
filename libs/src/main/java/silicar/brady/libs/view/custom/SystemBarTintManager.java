@@ -1,21 +1,5 @@
 package silicar.brady.libs.view.custom;
 
-/*
- * Copyright (C) 2013 readyState Software Ltd
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -34,9 +18,29 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
 import java.lang.reflect.Method;
+
+/**
+ * 自定义状态栏和导航栏样式
+ * 引用自 forked from jgilfelt/SystemBarTint @see  https://github.com/jgilfelt/SystemBarTint
+ * 做了细节调整
+ * Copyright (C) 2013 readyState Software Ltd
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 /**
  * Class to manage status and navigation bar tint effects when using KitKat 
@@ -63,6 +67,7 @@ public class SystemBarTintManager {
 
 
     /**
+     * 状态栏和导航栏默认颜色
      * The default system bar tint color value.
      */
     public static final int DEFAULT_TINT_COLOR = 0x99000000;
@@ -70,15 +75,24 @@ public class SystemBarTintManager {
     private static String sNavBarOverride;
 
     private final SystemBarConfig mConfig;
+    //APP背景色
+    private int windowBackground;
+    //状态栏和导航栏是否透明
     private boolean mStatusBarAvailable;
     private boolean mNavBarAvailable;
+    //是否自定义状态栏和导航栏
     private boolean mStatusBarTintEnabled;
     private boolean mNavBarTintEnabled;
+    //状态栏和导航栏视图
     private View mStatusBarTintView;
     private View mNavBarTintView;
+    //状态栏和导航栏视图
+    private ViewGroup decorViewGroup;
+    //布局文件根视图,用于设置padding
+    private FrameLayout rootView;
+    //布局文件视图,用于加载布局文件
     private View mContentView;
     private Activity activity;
-    ViewGroup decorViewGroup;
 
     /**
      * Constructor. Call this in the host activity onCreate method after its
@@ -89,6 +103,7 @@ public class SystemBarTintManager {
      */
     @TargetApi(19)
     public SystemBarTintManager(Activity activity) {
+
         this.activity = activity;
         Window win = activity.getWindow();
         decorViewGroup = (ViewGroup) win.getDecorView();
@@ -96,11 +111,12 @@ public class SystemBarTintManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // check theme attrs
             int[] attrs = {android.R.attr.windowTranslucentStatus,
-                    android.R.attr.windowTranslucentNavigation};
+                    android.R.attr.windowTranslucentNavigation, android.R.attr.windowBackground};
             TypedArray a = activity.obtainStyledAttributes(attrs);
             try {
                 mStatusBarAvailable = a.getBoolean(0, false);
                 mNavBarAvailable = a.getBoolean(1, false);
+                windowBackground = a.getColor(2, 0xffffffff);
             } finally {
                 a.recycle();
             }
@@ -126,32 +142,51 @@ public class SystemBarTintManager {
         if (mStatusBarAvailable) {
             setupStatusBarView(activity, decorViewGroup);
         }
+        //else
+        //    decorViewGroup.setFitsSystemWindows(true);
         if (mNavBarAvailable) {
             setupNavBarView(activity, decorViewGroup);
         }
-
+        rootView = new FrameLayout(activity);
+        rootView.setFitsSystemWindows(true);
+        decorViewGroup.addView(rootView);
     }
 
     public View getContentView() {
         return mContentView;
     }
 
-    public void setContentView(View contentView) {
+    public View setContentView(View contentView) {
         this.mContentView = contentView;
-        mContentView.setFilterTouchesWhenObscured(true);
         if (mContentView != null)
-            decorViewGroup.addView(mContentView);
+        {
+            mContentView.setBackgroundColor(windowBackground);
+            //判断5.0与4.0
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+//            {}
+//            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+//            {}
+            //if (!mStatusBarAvailable)
+            rootView.setPadding(0, mConfig.getStatusBarHeight(), 0, 0);
+            rootView.addView(mContentView);
+        }
+        return mContentView;
     }
 
-    public void setContentView(int layoutId)
+    public View setContentView(int layoutId)
     {
-        setContentView(layoutId, null);
+        return setContentView(layoutId, null);
     }
 
-    public void setContentView( int layoutId, ViewGroup root) {
+    public View setContentView( int layoutId, ViewGroup root) {
         mContentView = LayoutInflater.from(activity).inflate(layoutId, root);
         if (mContentView != null)
-            decorViewGroup.addView(mContentView);
+        {
+            mContentView.setBackgroundColor(windowBackground);
+            mContentView.setPadding(0, mConfig.getStatusBarHeight(), 0, 0);
+            rootView.addView(mContentView);
+        }
+        return mContentView;
     }
 
     /**
