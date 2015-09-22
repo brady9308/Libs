@@ -46,7 +46,7 @@ public class RecyclerViewUtil {
         public DefaultItemDecoration(Context context)
         {
             final TypedArray a = context.obtainStyledAttributes(ATTRS);
-            mDivider = a.getDrawable(0);
+            setDivider(a.getDrawable(0));
             a.recycle();
         }
 

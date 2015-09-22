@@ -12,7 +12,6 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -23,10 +22,7 @@ import android.widget.FrameLayout.LayoutParams;
 
 import java.lang.reflect.Method;
 
-/**
- * 自定义状态栏和导航栏样式
- * 引用自 forked from jgilfelt/SystemBarTint @see  https://github.com/jgilfelt/SystemBarTint
- * 做了细节调整
+/*
  * Copyright (C) 2013 readyState Software Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,7 +38,10 @@ import java.lang.reflect.Method;
  * limitations under the License.
  */
 
-/**
+/***
+ * 自定义状态栏和导航栏样式
+ * 引用自 forked from jgilfelt/SystemBarTint @see  https://github.com/jgilfelt/SystemBarTint
+ * 做了细节调整
  * Class to manage status and navigation bar tint effects when using KitKat 
  * translucent system UI modes.
  *
@@ -86,9 +85,9 @@ public class SystemBarTintManager {
     //状态栏和导航栏视图
     private View mStatusBarTintView;
     private View mNavBarTintView;
-    //状态栏和导航栏视图
+    //状态栏和导航栏视图层
     private ViewGroup decorViewGroup;
-    //布局文件根视图,用于设置padding
+    //布局文件根视图层,用于设置padding
     private FrameLayout rootView;
     //布局文件视图,用于加载布局文件
     private View mContentView;
@@ -106,7 +105,8 @@ public class SystemBarTintManager {
 
         this.activity = activity;
         Window win = activity.getWindow();
-        decorViewGroup = (ViewGroup) win.getDecorView();
+        //decorViewGroup = (ViewGroup) win.getDecorView();
+        decorViewGroup =  new FrameLayout(activity);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // check theme attrs
@@ -152,6 +152,10 @@ public class SystemBarTintManager {
         decorViewGroup.addView(rootView);
     }
 
+    public ViewGroup getDecorViewGroup() {
+        return decorViewGroup;
+    }
+
     public View getContentView() {
         return mContentView;
     }
@@ -161,13 +165,7 @@ public class SystemBarTintManager {
         if (mContentView != null)
         {
             mContentView.setBackgroundColor(windowBackground);
-            //判断5.0与4.0
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-//            {}
-//            else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-//            {}
-            //if (!mStatusBarAvailable)
-            rootView.setPadding(0, mConfig.getStatusBarHeight(), 0, 0);
+            //rootView.setPadding(0, mConfig.getStatusBarHeight(), 0, 0);
             rootView.addView(mContentView);
         }
         return mContentView;
@@ -179,14 +177,43 @@ public class SystemBarTintManager {
     }
 
     public View setContentView( int layoutId, ViewGroup root) {
-        mContentView = LayoutInflater.from(activity).inflate(layoutId, root);
+        mContentView = activity.getLayoutInflater().inflate(layoutId, root);
         if (mContentView != null)
         {
             mContentView.setBackgroundColor(windowBackground);
-            mContentView.setPadding(0, mConfig.getStatusBarHeight(), 0, 0);
+            //rootView.setPadding(0, mConfig.getStatusBarHeight(), 0, 0);
             rootView.addView(mContentView);
         }
         return mContentView;
+    }
+
+    public Drawable getBackground() {
+        return mContentView.getBackground();
+    }
+
+    public void setBackgroundColor(int color) {
+        mContentView.setBackgroundColor(color);
+    }
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setBackgroundResource(int resid) {
+        mContentView.setBackgroundResource(resid);
+    }
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void setBackground(Drawable background) {
+        //noinspection deprecation
+        mContentView.setBackground(background);
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public boolean getFitsSystemWindows()
+    {
+        return rootView.getFitsSystemWindows();
+    }
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    public void setFitsSystemWindows(boolean fitSystemWindows)
+    {
+        rootView.setFitsSystemWindows(fitSystemWindows);
     }
 
     /**
