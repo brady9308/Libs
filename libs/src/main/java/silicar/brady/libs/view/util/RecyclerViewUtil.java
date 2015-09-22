@@ -45,9 +45,20 @@ public class RecyclerViewUtil {
 
         public DefaultItemDecoration(Context context)
         {
-            final TypedArray a = context.obtainStyledAttributes(ATTRS);
+            TypedArray a = context.obtainStyledAttributes(ATTRS);
             setDivider(a.getDrawable(0));
             a.recycle();
+        }
+
+        public DefaultItemDecoration(Context context, int attr) {
+            int mATTRS[] = new int[]{attr};
+            TypedArray a = context.obtainStyledAttributes(mATTRS);
+            setDivider(a.getDrawable(0));
+            a.recycle();
+        }
+
+        public DefaultItemDecoration(Drawable divider) {
+            setDivider(divider);
         }
 
         @Override
