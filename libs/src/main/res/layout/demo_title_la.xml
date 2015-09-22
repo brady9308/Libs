@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
+    android:background="?attr/colorPrimaryDark">
+
+    <!-- 设置偏移
+    android:paddingTop="@dimen/toolbar_padding_top"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"-->
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/layout_toolbar"
+        android:id="@+id/title_toolbar" />
+</LinearLayout>
