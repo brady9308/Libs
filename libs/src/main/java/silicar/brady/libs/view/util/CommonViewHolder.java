@@ -24,7 +24,7 @@ public class CommonViewHolder
 		itemView = LayoutInflater.from(context).inflate(layoutId, parent,
 				false);
 		// setTag
-		itemView.setTag(this);
+		itemView.setTag(Integer.MIN_VALUE, this);
 	}
 
 	/**
@@ -46,12 +46,12 @@ public class CommonViewHolder
 		}
 		//((AdapterViewHolder)convertView.getTag()).setPosition(position);
 		try {
-			((CommonViewHolder) convertView.getTag()).setOldPosition(((CommonViewHolder) convertView.getTag()).getPosition());
-			((CommonViewHolder)convertView.getTag()).setPosition(position);
+			((CommonViewHolder) convertView.getTag(Integer.MIN_VALUE)).setOldPosition(((CommonViewHolder) convertView.getTag(Integer.MIN_VALUE)).getPosition());
+			((CommonViewHolder)convertView.getTag(Integer.MIN_VALUE)).setPosition(position);
 		} catch (Exception e) {
-			convertView.setTag(new CommonViewHolder(context, parent, layoutId, position));
+			convertView.setTag(Integer.MIN_VALUE, new CommonViewHolder(context, parent, layoutId, position));
 		}
-		return (CommonViewHolder) convertView.getTag();
+		return (CommonViewHolder) convertView.getTag(Integer.MIN_VALUE);
 	}
 
 	public static CommonViewHolder get(Context context, int position, ViewGroup parent, int layoutId)
@@ -78,7 +78,6 @@ public class CommonViewHolder
 			view = itemView.findViewById(viewId);
 			mViews.put(viewId, view);
 		}
-		view.setTag(mPosition);
 		return  view;
 	}
 
@@ -143,6 +142,6 @@ public class CommonViewHolder
 
 	public Object getTag()
 	{
-		return itemView.getTag();
+		return itemView.getTag(Integer.MIN_VALUE);
 	}
 }
