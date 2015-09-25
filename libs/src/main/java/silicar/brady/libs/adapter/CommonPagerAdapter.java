@@ -83,7 +83,7 @@ public abstract class CommonPagerAdapter<T> extends PagerAdapter {
         container.removeView(getView(mContext, container, (ItemModel<T>)object));
         //设置是否复用,
         if (!reuse)
-            putView(position, null);
+            removeView(position);
     }
 
     public List<T> getData()
@@ -149,6 +149,27 @@ public abstract class CommonPagerAdapter<T> extends PagerAdapter {
         return LayoutInflater.from(context).inflate(layoutId, container, false);
     }
 
+    public void removeView(int position)
+    {
+        putView(position, null);
+    }
+
+    /**
+     * @deprecated 由于instantiateItem并不一定在destroyItem()后同步执行
+     * 通过setCurrentItem切换会出现未destroyItem()先instantiateItem
+     * 出现二次添加View的情况,而报错
+     * 仅适用于每次只翻动1页的手动翻页
+     * 通过key获取缓存的View
+     * @param key
+     * @return
+     */
+    @Deprecated
+    public View getReuseView(int key)
+    {
+        View view = mViews.get(key % mPageLimit);
+        return  view;
+    }
+
     /**
      * 通过key获取缓存的View
      * @param key
@@ -156,8 +177,20 @@ public abstract class CommonPagerAdapter<T> extends PagerAdapter {
      */
     public View getView(int key)
     {
-        View view = mViews.get(key % mPageLimit);
+        View view = mViews.get(key);
         return  view;
+    }
+
+    /**
+     * @deprecated
+     * 缓存View
+     * @param key
+     * @param view
+     */
+    @Deprecated
+    public void putReuseView(int key, View view)
+    {
+        mViews.put(key % mPageLimit, view);
     }
 
     /**
@@ -167,7 +200,7 @@ public abstract class CommonPagerAdapter<T> extends PagerAdapter {
      */
     public void putView(int key, View view)
     {
-        mViews.put(key % mPageLimit, view);
+        mViews.put(key, view);
     }
 
     /**
@@ -179,6 +212,14 @@ public abstract class CommonPagerAdapter<T> extends PagerAdapter {
     public void setOffscreenPageLimit(int pageLimit)
     {
         mPageLimit = (pageLimit * 2 + 2);
+    }
+
+    public int getOffscreenPageLimit() {
+        return (mPageLimit - 2) / 2;
+    }
+
+    public int getPageLimit() {
+        return mPageLimit;
     }
 
     public class ItemModel<T>
